@@ -87,13 +87,13 @@ function hasPermission(permission) {
 // Đăng xuất
 function logout() {
     localStorage.removeItem('currentUser');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 // Chuyển hướng nếu chưa đăng nhập
 function requireLogin() {
     if (!isLoggedIn()) {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     }
 }
 
