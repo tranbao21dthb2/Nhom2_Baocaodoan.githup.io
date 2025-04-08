@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hà Đình Chương - Backend Developer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card fade-in">
+            <div class="profile">
+                <img src="IMG/chuong.jpg" alt="Hà Đình Chương">
+                <h1>Hà Đình Chương</h1>
+                <h2>Backend Developer</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Thông tin cá nhân</h3>
+                <ul class="info-list">
+                    <li><strong>Ngày sinh:</strong> 15/7/1999</li>
+                    <li><strong>Điện thoại:</strong> 0987654321</li>
+                    <li><strong>Email:</strong> hadinhchuong@example.com</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>Kỹ năng</h3>
+                <ul class="info-list">
+                    <li>PHP/MySQL</li>
+                    <li>Node.js/Express</li>
+                    <li>RESTful API</li>
+                    <li>MongoDB</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;" id="actionButtons">
+                <a href="modern.html" class="btn">Quay lại</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Kiểm tra trạng thái đăng nhập và hiển thị nút xem thông báo nếu đã đăng nhập
+        function updateButtons() {
+            const currentUser = getCurrentUser();
+            const actionButtons = document.getElementById('actionButtons');
+            
+            if (currentUser && currentUser.username === 'chuong') {
+                actionButtons.innerHTML = `
+                    <a href="notifications.html" class="btn" style="margin-right: 1rem;">Xem thông báo</a>
+                    <a href="modern.html" class="btn">Quay lại</a>
+                `;
+            }
+        }
+
+        // Gọi hàm khi trang được tải
+        window.onload = updateButtons;
+    </script>
+</body>
+</html> 
