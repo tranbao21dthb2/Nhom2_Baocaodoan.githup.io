@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhóm 2 - Modern Design</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header-content {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .logout-btn i {
+            font-size: 1.1rem;
+        }
+
+        .login-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-btn:hover {
+            background: #357abd;
+        }
+
+        .members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .member {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .member img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .member h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .member p {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .members {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Thêm CSS cho thanh điều hướng */
+        .main-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        .main-nav li {
+            position: relative;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .main-nav a::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .main-nav a:hover::before,
+        .main-nav a.active::before {
+            width: 80%;
+        }
+
+        .main-nav a:hover {
+            color: var(--primary-color);
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .main-nav a.active {
+            color: var(--primary-color);
+            background: rgba(74, 144, 226, 0.15);
+        }
+
+        /* Thêm icons cho menu */
+        .main-nav a[href="modern.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f015";
+            margin-right: 8px;
+        }
+
+        .main-nav a[href="chat.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f086";
+            margin-right: 8px;
+        }
+
+        .main-nav a[href="documents.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f15c";
+            margin-right: 8px;
+        }
+
+        .main-nav a[href="dashboard.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f080";
+            margin-right: 8px;
+        }
+
+        /* Thêm icons cho menu mới */
+        .main-nav a[href="calendar.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f133";
+            margin-right: 8px;
+        }
+
+        .main-nav a[href="tasks.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f0ae";
+            margin-right: 8px;
+        }
+
+        .main-nav a[href="gallery.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f03e";
+            margin-right: 8px;
+        }
+
+        .main-nav a[href="blog.html"]::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f781";
+            margin-right: 8px;
+        }
+
+        /* Responsive cho menu */
+        @media (max-width: 768px) {
+            .main-nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .main-nav a {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .main-nav a::before {
+                bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>Nhóm 2</h1>
+                <p>Thiết kế hiện đại - Sáng tạo và chuyên nghiệp</p>
+            </div>
+            <div class="user-info" id="userInfo">
+                <!-- User info will be inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="modern.html" class="active">Trang chủ</a></li>
+                <li><a href="chat.html">Chat nhóm</a></li>
+                <li><a href="documents.html">Tài liệu</a></li>
+                <li><a href="calendar.html">Lịch nhóm</a></li>
+                <li><a href="tasks.html">Công việc</a></li>
+                <li><a href="gallery.html">Thư viện</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li id="dashboardLink" style="display: none;"><a href="dashboard.html">Quản lý</a></li>
+            </ul>
+        </nav>
+
+        <div class="members">
+            <div class="member">
+                <img src="img/quocbao.jpg" alt="Trần Quốc Bảo">
+                <h2>Trần Quốc Bảo</h2>
+                <p>Nhóm trưởng</p>
+                <a href="baotran.html" class="btn">Xem thông tin</a>
+            </div>
+
+            <div class="member">
+                <img src="img/mhuy.jpg" alt="Nguyễn Minh Huy">
+                <h2>Nguyễn Minh Huy</h2>
+                <p>Thành viên</p>
+                <a href="huy.html" class="btn">Xem thông tin</a>
+            </div>
+
+            <div class="member">
+                <img src="img/tringuyen.jpg" alt="Đặng Trí Nguyễn">
+                <h2>Đặng Trí Nguyễn</h2>
+                <p>Thành viên</p>
+                <a href="nguyendang.html" class="btn">Xem thông tin</a>
+            </div>
+
+            <div class="member">
+                <img src="img/quochuy.jpg" alt="Võ Trần Quốc Huy">
+                <h2>Võ Trần Quốc Huy</h2>
+                <p>Thành viên</p>
+                <a href="quochuy.html" class="btn">Xem thông tin</a>
+            </div>
+
+            <div class="member">
+                <img src="img/chuong.jpg" alt="Hà Đình Chương">
+                <h2>Hà Đình Chương</h2>
+                <p>Thành viên</p>
+                <a href="chuong.html" class="btn">Xem thông tin</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function updateUserInfo() {
+            const userInfo = document.getElementById('userInfo');
+            const dashboardLink = document.getElementById('dashboardLink');
+            const currentUser = getCurrentUser();
+
+            if (currentUser) {
+                userInfo.innerHTML = `
+                    <div class="user-details">
+                        <div class="user-name">${currentUser.fullName}</div>
+                        <div class="user-role">${currentUser.role === 'leader' ? 'Trưởng nhóm' : 'Thành viên'}</div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Đăng xuất
+                    </button>
+                `;
+
+                // Chỉ hiển thị liên kết quản lý cho trưởng nhóm
+                if (currentUser.role === 'leader') {
+                    dashboardLink.style.display = 'block';
+                } else {
+                    dashboardLink.style.display = 'none';
+                }
+            } else {
+                userInfo.innerHTML = `
+                    <a href="login.html" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Đăng nhập
+                    </a>
+                `;
+                dashboardLink.style.display = 'none';
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                logout();
+            }
+        }
+
+        // Cập nhật thông tin người dùng khi trang được tải
+        window.onload = updateUserInfo;
+    </script>
+</body>
+</html> 

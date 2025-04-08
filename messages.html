@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tin nhắn - Nhóm 2</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .message-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .message-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .message-type {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .message-type label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .message-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .message-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1rem;
+        }
+
+        .message-item:last-child {
+            border-bottom: none;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .message-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .message-content {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .message-type-announcement {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+        }
+
+        .message-type-wish {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+        }
+
+        .message-type-feedback {
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message-container">
+            <h1 class="fade-in" style="text-align: center; margin-bottom: 2rem;">Quản lý tin nhắn</h1>
+
+            <!-- Form gửi tin nhắn -->
+            <div class="message-form fade-in">
+                <h2>Gửi tin nhắn mới</h2>
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label>Loại tin nhắn</label>
+                        <div class="message-type">
+                            <label>
+                                <input type="radio" name="messageType" value="wish" checked>
+                                Lời chúc
+                            </label>
+                            <label>
+                                <input type="radio" name="messageType" value="feedback">
+                                Góp ý
+                            </label>
+                            <label>
+                                <input type="radio" name="messageType" value="announcement">
+                                Thông báo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Người nhận</label>
+                        <select name="recipient" required>
+                            <option value="all">Toàn bộ nhóm</option>
+                            <option value="quocbao">Trần Quốc Bảo</option>
+                            <option value="minhhuy">Nguyễn Minh Huy</option>
+                            <option value="tringuyen">Đặng Trí Nguyễn</option>
+                            <option value="quochuy">Võ Trần Quốc Huy</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input type="text" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nội dung</label>
+                        <textarea name="content" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Gửi tin nhắn</button>
+                </form>
+            </div>
+
+            <!-- Danh sách tin nhắn -->
+            <div class="message-list fade-in">
+                <h2>Tin nhắn đã gửi</h2>
+                <div class="message-item message-type-announcement">
+                    <div class="message-header">
+                        <span class="message-sender">Trần Quốc Bảo</span>
+                        <span class="message-date">20/03/2024</span>
+                    </div>
+                    <h3>Thông báo họp nhóm</h3>
+                    <div class="message-content">
+                        Nhóm mình sẽ có buổi họp vào lúc 14:00 ngày 25/03/2024 để bàn về dự án mới.
+                    </div>
+                </div>
+
+                <div class="message-item message-type-wish">
+                    <div class="message-header">
+                        <span class="message-sender">Nguyễn Minh Huy</span>
+                        <span class="message-date">19/03/2024</span>
+                    </div>
+                    <h3>Chúc mừng sinh nhật</h3>
+                    <div class="message-content">
+                        Chúc mừng sinh nhật Quốc Huy! Chúc bạn luôn thành công và hạnh phúc!
+                    </div>
+                </div>
+
+                <div class="message-item message-type-feedback">
+                    <div class="message-header">
+                        <span class="message-sender">Đặng Trí Nguyễn</span>
+                        <span class="message-date">18/03/2024</span>
+                    </div>
+                    <h3>Góp ý về dự án</h3>
+                    <div class="message-content">
+                        Mình có một số ý kiến về phần UI của dự án, mong mọi người xem xét.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('messageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Lấy dữ liệu từ form
+            const formData = new FormData(this);
+            const messageData = {
+                type: formData.get('messageType'),
+                recipient: formData.get('recipient'),
+                title: formData.get('title'),
+                content: formData.get('content'),
+                date: new Date().toLocaleDateString('vi-VN')
+            };
+
+            // TODO: Gửi dữ liệu đến server
+            console.log('Message data:', messageData);
+
+            // Hiển thị thông báo thành công
+            alert('Tin nhắn đã được gửi thành công!');
+            this.reset();
+        });
+    </script>
+</body>
+</html> 

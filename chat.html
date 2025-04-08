@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Nhóm - Nhóm 2</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .chat-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 4rem);
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            padding: 1rem;
+        }
+
+        .online-users {
+            margin-bottom: 2rem;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .user-item:hover {
+            background: #f8f9fa;
+        }
+
+        .user-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ecc71;
+        }
+
+        .user-status.offline {
+            background: #95a5a6;
+        }
+
+        .chat-main {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .message.sent {
+            background: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .message.received {
+            background: #f1f1f1;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .message-info {
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .message.sent .message-info {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .message.received .message-info {
+            color: var(--secondary-color);
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .chat-input button {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chat-input button:hover {
+            background: var(--accent-color);
+        }
+
+        .emoji-picker {
+            position: relative;
+            display: inline-block;
+        }
+
+        .emoji-btn {
+            padding: 0.8rem;
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .emoji-list {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 0.5rem;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .emoji-list.show {
+            display: grid;
+        }
+
+        .emoji {
+            cursor: pointer;
+            padding: 0.3rem;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        .emoji:hover {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chat-container">
+            <div class="sidebar">
+                <div class="online-users">
+                    <h3>Thành viên online</h3>
+                    <div class="user-list" id="userList">
+                        <!-- Users will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-main">
+                <div class="chat-header">
+                    <h2>Chat nhóm</h2>
+                    <a href="modern.html" class="btn">Quay lại</a>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be added here -->
+                </div>
+
+                <div class="chat-input">
+                    <div class="emoji-picker">
+                        <button class="emoji-btn" onclick="toggleEmojiPicker()">😊</button>
+                        <div class="emoji-list" id="emojiList">
+                            <!-- Emojis will be added here -->
+                        </div>
+                    </div>
+                    <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
+                    <button onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i> Gửi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Kiểm tra đăng nhập
+        requireLogin();
+
+        const currentUser = getCurrentUser();
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const userList = document.getElementById('userList');
+
+        // Danh sách emoji mẫu
+        const emojis = ['😊', '😂', '❤️', '👍', '😍', '🎉', '✨', '🌟', '💪', '🤝', '👋', '🙌', '🎯', '💡', '📚', '💻'];
+
+        // Hiển thị danh sách emoji
+        function initEmojiPicker() {
+            const emojiList = document.getElementById('emojiList');
+            emojis.forEach(emoji => {
+                const span = document.createElement('span');
+                span.className = 'emoji';
+                span.textContent = emoji;
+                span.onclick = () => addEmoji(emoji);
+                emojiList.appendChild(span);
+            });
+        }
+
+        // Thêm emoji vào input
+        function addEmoji(emoji) {
+            messageInput.value += emoji;
+            toggleEmojiPicker();
+        }
+
+        // Hiển thị/ẩn emoji picker
+        function toggleEmojiPicker() {
+            const emojiList = document.getElementById('emojiList');
+            emojiList.classList.toggle('show');
+        }
+
+        // Gửi tin nhắn
+        function sendMessage() {
+            const content = messageInput.value.trim();
+            if (!content) return;
+
+            const message = {
+                sender: currentUser.fullName,
+                content: content,
+                timestamp: new Date().toLocaleTimeString(),
+                type: 'sent'
+            };
+
+            addMessageToChat(message);
+            messageInput.value = '';
+        }
+
+        // Thêm tin nhắn vào chat
+        function addMessageToChat(message) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${message.type}`;
+            messageElement.innerHTML = `
+                <div class="message-info">
+                    ${message.sender} • ${message.timestamp}
+                </div>
+                <div class="message-content">
+                    ${message.content}
+                </div>
+            `;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Cập nhật danh sách người dùng
+        function updateUserList() {
+            userList.innerHTML = users.map(user => `
+                <div class="user-item">
+                    <span class="user-status ${Math.random() > 0.5 ? '' : 'offline'}"></span>
+                    <span>${user.fullName}</span>
+                </div>
+            `).join('');
+        }
+
+        // Xử lý gửi tin nhắn khi nhấn Enter
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Khởi tạo
+        initEmojiPicker();
+        updateUserList();
+
+        // Thêm một số tin nhắn mẫu
+        const sampleMessages = [
+            {
+                sender: 'Trần Quốc Bảo',
+                content: 'Chào mọi người! 👋',
+                timestamp: '10:00',
+                type: 'received'
+            },
+            {
+                sender: 'Nguyễn Minh Huy',
+                content: 'Chào Bảo! Dự án đang tiến triển tốt 💪',
+                timestamp: '10:02',
+                type: 'received'
+            },
+            {
+                sender: currentUser.fullName,
+                content: 'Tuyệt vời! Mình sẽ cập nhật thêm tính năng mới 🚀',
+                timestamp: '10:05',
+                type: 'sent'
+            }
+        ];
+
+        sampleMessages.forEach(msg => addMessageToChat(msg));
+    </script>
+</body>
+</html> 

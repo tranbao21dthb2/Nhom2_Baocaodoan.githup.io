@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Quản lý nhóm 2</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .logout-btn i {
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            padding: 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .recent-announcements {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .announcement-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+
+        .announcement-date {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .member-management {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .members-table {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .stats-detail {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .stat-item h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stat-item p {
+            margin: 0.5rem 0;
+            color: var(--text-color);
+        }
+
+        /* Action buttons in table */
+        td .action-btn {
+            padding: 0.5rem;
+            margin: 0 0.25rem;
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        td .action-btn:hover {
+            color: var(--accent-color);
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Thêm style cho nút điều hướng */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 0 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-color);
+        }
+
+        .nav-btn i {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Quản lý nhóm 2</h1>
+            <div class="user-info">
+                <img src="IMG/quocbao.jpg" alt="Avatar" class="avatar">
+                <div>
+                    <span id="userName">Trần Quốc Bảo</span>
+                    <span id="userRole">Trưởng nhóm</span>
+                </div>
+                <div class="nav-buttons">
+                    <a href="modern.html" class="nav-btn">
+                        <i class="fas fa-home"></i>
+                        Trang chủ
+                    </a>
+                    <a href="chat.html" class="nav-btn">
+                        <i class="fas fa-comments"></i>
+                        Chat nhóm
+                    </a>
+                    <a href="documents.html" class="nav-btn">
+                        <i class="fas fa-file-alt"></i>
+                        Tài liệu
+                    </a>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Đăng xuất
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <div class="left-panel">
+                <!-- Thống kê -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Tổng thành viên</h3>
+                        <div class="number" id="totalMembers">4</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Thành viên thường</h3>
+                        <div class="number" id="regularMembers">3</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Thông báo hôm nay</h3>
+                        <div class="number" id="todayAnnouncements">0</div>
+                    </div>
+                </div>
+
+                <!-- Hành động nhanh -->
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="showAnnouncementForm()">Gửi thông báo</button>
+                    <button class="action-btn" onclick="showAddMemberForm()">Thêm thành viên</button>
+                    <button class="action-btn" onclick="showEmailForm()">Gửi email</button>
+                    <button class="action-btn" onclick="showStatistics()">Xem thống kê</button>
+                </div>
+
+                <!-- Thông báo gần đây -->
+                <div class="recent-announcements">
+                    <h2>Thông báo gần đây</h2>
+                    <div id="announcementsList">
+                        <!-- Thông báo sẽ được thêm vào đây bằng JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <!-- Quản lý thành viên -->
+                <div class="member-management">
+                    <h2>Quản lý thành viên</h2>
+                    <input type="text" class="search-box" placeholder="Tìm kiếm thành viên..." onkeyup="searchMembers(this.value)">
+                    <div class="member-actions">
+                        <button class="action-btn" onclick="exportMembers()">Xuất danh sách</button>
+                        <button class="action-btn" onclick="importMembers()">Nhập danh sách</button>
+                    </div>
+                    <table class="members-table">
+                        <thead>
+                            <tr>
+                                <th>Tên đăng nhập</th>
+                                <th>Họ tên</th>
+                                <th>Email</th>
+                                <th>Vai trò</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersList">
+                            <!-- Thành viên sẽ được thêm vào đây bằng JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/email.js"></script>
+    <script>
+        // Kiểm tra đăng nhập và quyền truy cập
+        requireLogin();
+        requireLeader();
+
+        // Hiển thị thông tin người dùng
+        const currentUser = getCurrentUser();
+        document.getElementById('userName').textContent = currentUser.fullName;
+        document.getElementById('userRole').textContent = currentUser.role === 'leader' ? 'Trưởng nhóm' : 'Thành viên';
+
+        // Các hàm xử lý sự kiện
+        function showAnnouncementForm() {
+            const form = `
+                <div class="modal">
+                    <div class="modal-content">
+                        <h2>Gửi thông báo mới</h2>
+                        <form id="announcementForm">
+                            <div class="form-group">
+                                <label>Tiêu đề</label>
+                                <input type="text" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nội dung</label>
+                                <textarea name="content" required></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn">Gửi thông báo</button>
+                                <button type="button" class="btn" onclick="closeModal()">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', form);
+            
+            document.getElementById('announcementForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const announcement = {
+                    title: formData.get('title'),
+                    content: formData.get('content'),
+                    date: new Date().toLocaleDateString('vi-VN'),
+                    sender: currentUser.fullName
+                };
+                
+                // Thêm thông báo vào danh sách
+                addAnnouncement(announcement);
+                
+                // Gửi email thông báo cho tất cả thành viên
+                const recipients = users.map(user => user.email);
+                await emailUtils.sendBulkEmail(recipients, announcement.title, announcement.content);
+                
+                closeModal();
+                alert('Thông báo đã được gửi thành công!');
+            });
+        }
+
+        function showAddMemberForm() {
+            const form = `
+                <div class="modal">
+                    <div class="modal-content">
+                        <h2>Thêm thành viên mới</h2>
+                        <form id="addMemberForm">
+                            <div class="form-group">
+                                <label>Tên đăng nhập</label>
+                                <input type="text" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Họ tên</label>
+                                <input type="text" name="fullName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Vai trò</label>
+                                <select name="role">
+                                    <option value="member">Thành viên</option>
+                                    <option value="leader">Trưởng nhóm</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn">Thêm thành viên</button>
+                                <button type="button" class="btn" onclick="closeModal()">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', form);
+            
+            document.getElementById('addMemberForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const newMember = {
+                    username: formData.get('username'),
+                    fullName: formData.get('fullName'),
+                    email: formData.get('email'),
+                    role: formData.get('role'),
+                    password: 'password' // Mật khẩu mặc định
+                };
+                
+                // Thêm thành viên mới vào danh sách
+                users.push(newMember);
+                
+                // Cập nhật giao diện
+                updateMembersList();
+                updateStats();
+                
+                closeModal();
+                alert('Thêm thành viên thành công!');
+            });
+        }
+
+        function showEmailForm() {
+            const form = `
+                <div class="modal">
+                    <div class="modal-content">
+                        <h2>Gửi email</h2>
+                        <form id="emailForm">
+                            <div class="form-group">
+                                <label>Người nhận</label>
+                                <select name="recipient" required>
+                                    <option value="all">Tất cả thành viên</option>
+                                    ${users.map(user => `
+                                        <option value="${user.username}">${user.fullName}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tiêu đề</label>
+                                <input type="text" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nội dung</label>
+                                <textarea name="content" required></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn">Gửi email</button>
+                                <button type="button" class="btn" onclick="closeModal()">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', form);
+            
+            document.getElementById('emailForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const emailData = {
+                    recipient: formData.get('recipient'),
+                    subject: formData.get('subject'),
+                    content: formData.get('content')
+                };
+                
+                try {
+                    if (emailData.recipient === 'all') {
+                        await emailUtils.sendBulkEmail(
+                            users.map(user => user.email),
+                            emailData.subject,
+                            emailData.content
+                        );
+                    } else {
+                        const recipientEmail = emailUtils.getRecipientEmail(emailData.recipient);
+                        await emailUtils.sendEmailNotification(
+                            recipientEmail,
+                            emailData.subject,
+                            emailData.content
+                        );
+                    }
+                    closeModal();
+                    alert('Email đã được gửi thành công!');
+                } catch (error) {
+                    alert('Có lỗi xảy ra khi gửi email!');
+                }
+            });
+        }
+
+        function showStatistics() {
+            const stats = calculateStats();
+            const statsModal = `
+                <div class="modal">
+                    <div class="modal-content">
+                        <h2>Thống kê chi tiết</h2>
+                        <div class="stats-detail">
+                            <div class="stat-item">
+                                <h3>Thành viên</h3>
+                                <p>Tổng số: ${stats.totalMembers}</p>
+                                <p>Trưởng nhóm: ${stats.leaders}</p>
+                                <p>Thành viên thường: ${stats.regularMembers}</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>Hoạt động</h3>
+                                <p>Thông báo hôm nay: ${stats.todayAnnouncements}</p>
+                                <p>Email đã gửi: ${stats.emailsSent}</p>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="closeModal()">Đóng</button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', statsModal);
+        }
+
+        function searchMembers(query) {
+            const membersList = document.getElementById('membersList');
+            const members = Array.from(membersList.getElementsByTagName('tr'));
+            
+            members.forEach(member => {
+                const text = member.textContent.toLowerCase();
+                const isMatch = text.includes(query.toLowerCase());
+                member.style.display = isMatch ? '' : 'none';
+            });
+        }
+
+        function exportMembers() {
+            const members = users.map(user => ({
+                username: user.username,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role
+            }));
+            
+            const csv = [
+                ['Tên đăng nhập', 'Họ tên', 'Email', 'Vai trò'],
+                ...members.map(m => [m.username, m.fullName, m.email, m.role])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'members.csv';
+            a.click();
+        }
+
+        function importMembers() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv';
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    const rows = text.split('\n').slice(1); // Bỏ qua header
+                    
+                    rows.forEach(row => {
+                        const [username, fullName, email, role] = row.split(',');
+                        if (username && fullName && email && role) {
+                            users.push({
+                                username: username.trim(),
+                                fullName: fullName.trim(),
+                                email: email.trim(),
+                                role: role.trim(),
+                                password: 'password'
+                            });
+                        }
+                    });
+                    
+                    updateMembersList();
+                    updateStats();
+                    alert('Nhập danh sách thành viên thành công!');
+                };
+                
+                reader.readAsText(file);
+            });
+            
+            input.click();
+        }
+
+        // Các hàm tiện ích
+        function closeModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function addAnnouncement(announcement) {
+            const announcementsList = document.getElementById('announcementsList');
+            const announcementHTML = `
+                <div class="announcement-item">
+                    <div class="message-header">
+                        <span class="message-sender">${announcement.sender}</span>
+                        <span class="message-date">${announcement.date}</span>
+                    </div>
+                    <h3>${announcement.title}</h3>
+                    <div class="message-content">${announcement.content}</div>
+                </div>
+            `;
+            announcementsList.insertAdjacentHTML('afterbegin', announcementHTML);
+            
+            // Cập nhật số thông báo
+            const todayAnnouncements = document.getElementById('todayAnnouncements');
+            todayAnnouncements.textContent = parseInt(todayAnnouncements.textContent) + 1;
+        }
+
+        function updateMembersList() {
+            const membersList = document.getElementById('membersList');
+            membersList.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.fullName}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role === 'leader' ? 'Trưởng nhóm' : 'Thành viên'}</td>
+                    <td>
+                        <button class="action-btn" onclick="editMember('${user.username}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn" onclick="deleteMember('${user.username}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            const stats = calculateStats();
+            document.getElementById('totalMembers').textContent = stats.totalMembers;
+            document.getElementById('regularMembers').textContent = stats.regularMembers;
+        }
+
+        function calculateStats() {
+            return {
+                totalMembers: users.length,
+                leaders: users.filter(u => u.role === 'leader').length,
+                regularMembers: users.filter(u => u.role === 'member').length,
+                todayAnnouncements: parseInt(document.getElementById('todayAnnouncements').textContent),
+                emailsSent: 0 // Có thể thêm logic đếm email đã gửi
+            };
+        }
+
+        function editMember(username) {
+            const member = users.find(u => u.username === username);
+            if (!member) return;
+            
+            const form = `
+                <div class="modal">
+                    <div class="modal-content">
+                        <h2>Chỉnh sửa thành viên</h2>
+                        <form id="editMemberForm">
+                            <div class="form-group">
+                                <label>Tên đăng nhập</label>
+                                <input type="text" name="username" value="${member.username}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Họ tên</label>
+                                <input type="text" name="fullName" value="${member.fullName}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" value="${member.email}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Vai trò</label>
+                                <select name="role">
+                                    <option value="member" ${member.role === 'member' ? 'selected' : ''}>Thành viên</option>
+                                    <option value="leader" ${member.role === 'leader' ? 'selected' : ''}>Trưởng nhóm</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn">Lưu thay đổi</button>
+                                <button type="button" class="btn" onclick="closeModal()">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', form);
+            
+            document.getElementById('editMemberForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const index = users.findIndex(u => u.username === username);
+                
+                users[index] = {
+                    ...users[index],
+                    fullName: formData.get('fullName'),
+                    email: formData.get('email'),
+                    role: formData.get('role')
+                };
+                
+                updateMembersList();
+                updateStats();
+                closeModal();
+                alert('Cập nhật thông tin thành công!');
+            });
+        }
+
+        function deleteMember(username) {
+            if (confirm('Bạn có chắc chắn muốn xóa thành viên này?')) {
+                const index = users.findIndex(u => u.username === username);
+                users.splice(index, 1);
+                updateMembersList();
+                updateStats();
+                alert('Đã xóa thành viên thành công!');
+            }
+        }
+
+        // Khởi tạo dữ liệu ban đầu
+        function loadInitialData() {
+            updateMembersList();
+            updateStats();
+        }
+
+        // Gọi hàm tải dữ liệu khi trang được tải
+        window.onload = loadInitialData;
+
+        // Hàm xử lý đăng xuất
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                logout(); // Hàm này đã được định nghĩa trong auth.js
+            }
+        }
+    </script>
+</body>
+</html> 

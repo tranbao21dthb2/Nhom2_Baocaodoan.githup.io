@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo - Nhóm 2</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .notifications-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .notification-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-sender {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .notification-date {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .notification-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .notification-content {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .notification-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .type-announcement {
+            background-color: #e74c3c20;
+            color: var(--accent-color);
+        }
+
+        .type-wish {
+            background-color: #3498db20;
+            color: var(--primary-color);
+        }
+
+        .type-feedback {
+            background-color: #2ecc7120;
+            color: #27ae60;
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="notifications-container">
+            <header class="header">
+                <h1>Thông báo</h1>
+                <div class="user-info">
+                    <img src="IMG/quocbao.jpg" alt="Avatar" class="avatar">
+                    <div>
+                        <span id="userName"></span>
+                        <span id="userRole"></span>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Đăng xuất
+                    </button>
+                </div>
+            </header>
+
+            <div class="notification-list" id="notificationList">
+                <!-- Thông báo sẽ được thêm vào đây bằng JavaScript -->
+            </div>
+
+            <div class="action-buttons">
+                <a href="modern.html" class="btn btn-primary">Quay lại trang chủ</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Kiểm tra đăng nhập
+        requireLogin();
+
+        // Hiển thị thông tin người dùng
+        const currentUser = getCurrentUser();
+        document.getElementById('userName').textContent = currentUser.fullName;
+        document.getElementById('userRole').textContent = currentUser.role === 'leader' ? 'Trưởng nhóm' : 'Thành viên';
+
+        // Mảng thông báo mẫu (trong thực tế sẽ lấy từ server)
+        const notifications = [
+            {
+                type: 'announcement',
+                sender: 'Trần Quốc Bảo',
+                date: '08/04/2024',
+                title: 'Thông báo họp nhóm',
+                content: 'Nhóm sẽ có buổi họp vào lúc 14:00 ngày 10/04/2024 để thảo luận về dự án mới.'
+            },
+            {
+                type: 'wish',
+                sender: 'Nguyễn Minh Huy',
+                date: '07/04/2024',
+                title: 'Chúc mừng sinh nhật',
+                content: 'Chúc mừng sinh nhật Quốc Huy! Chúc bạn có một ngày thật vui vẻ và hạnh phúc!'
+            },
+            {
+                type: 'feedback',
+                sender: 'Đặng Trí Nguyễn',
+                date: '06/04/2024',
+                title: 'Góp ý về dự án',
+                content: 'Mình có một số ý kiến về giao diện người dùng của dự án, mong mọi người xem xét.'
+            }
+        ];
+
+        // Hiển thị danh sách thông báo
+        function displayNotifications() {
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = notifications.map(notification => `
+                <div class="notification-item">
+                    <span class="notification-type type-${notification.type}">
+                        ${getNotificationType(notification.type)}
+                    </span>
+                    <div class="notification-header">
+                        <span class="notification-sender">${notification.sender}</span>
+                        <span class="notification-date">${notification.date}</span>
+                    </div>
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-content">${notification.content}</div>
+                </div>
+            `).join('');
+        }
+
+        // Chuyển đổi loại thông báo
+        function getNotificationType(type) {
+            const types = {
+                announcement: 'Thông báo',
+                wish: 'Lời chúc',
+                feedback: 'Góp ý'
+            };
+            return types[type] || type;
+        }
+
+        // Xử lý đăng xuất
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                logout();
+            }
+        }
+
+        // Hiển thị thông báo khi trang được tải
+        window.onload = displayNotifications;
+    </script>
+</body>
+</html> 
