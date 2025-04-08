@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặng Trí Nguyễn - Thông tin cá nhân</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card fade-in">
+            <div class="profile">
+                <img src="IMG/tringuyen.jpg" alt="Đặng Trí Nguyễn">
+                <h1>Đặng Trí Nguyễn</h1>
+                <h2>Thành viên nhóm</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Thông tin cá nhân</h3>
+                <ul class="info-list">
+                    <li><strong>MSSV:</strong> 2180605900</li>
+                    <li><strong>Email:</strong> dangtringuyen2018cm@gmail.com</li>
+                    <li><strong>Ngành học:</strong> Công Nghệ Thông Tin</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3>Các môn đã học</h3>
+                <ul class="info-list">
+                    <li>Nhập môn lập trình</li>
+                    <li>Kỹ thuật lập trình</li>
+                    <li>Cấu trúc dữ liệu và giải thuật</li>
+                    <li>Lập trình hướng đối tượng</li>
+                    <li>Cơ sở dữ liệu</li>
+                    <li>Hệ điều hành</li>
+                    <li>Mạng máy tính</li>
+                    <li>Công nghệ phần mềm</li>
+                    <li>Lập trình Web</li>
+                    <li>An toàn thông tin</li>
+                    <li>Trí tuệ nhân tạo</li>
+                    <li>Phân tích thiết kế hệ thống</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;" id="actionButtons">
+                <a href="modern.html" class="btn">Quay lại</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Kiểm tra trạng thái đăng nhập và hiển thị nút xem thông báo nếu đã đăng nhập
+        function updateButtons() {
+            const currentUser = getCurrentUser();
+            const actionButtons = document.getElementById('actionButtons');
+            
+            if (currentUser && currentUser.username === 'tringuyen') {
+                actionButtons.innerHTML = `
+                    <a href="notifications.html" class="btn" style="margin-right: 1rem;">Xem thông báo</a>
+                    <a href="modern.html" class="btn">Quay lại</a>
+                `;
+            }
+        }
+
+        // Gọi hàm khi trang được tải
+        window.onload = updateButtons;
+    </script>
+</body>
+</html>
